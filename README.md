@@ -1,6 +1,6 @@
-# 🧠 SE-CVLA: Self-Evolving Causal Vision-Language-Action Model
+# SE-CVLA: Self-Evolving Causal Vision-Language-Action Model
 
-**A PhD-grade research codebase for causal autonomous driving on PhysicalAI-AV**
+**Research for causal autonomous driving on PhysicalAI-AV dataset**
 
 > *"Autonomous systems that continuously learn and refine their own Structural Causal Models (SCMs) in closed-loop interaction will significantly improve robustness, safety, and interpretability."*
 
