@@ -140,10 +140,9 @@ $$\mathcal{L} = \mathcal{L}_{\text{task}} + \lambda_1 \mathcal{L}_{\text{causal}
 ```bibtex
 @phdthesis{secvla2025,
   title     = {Self-Evolving Causal Vision-Language-Action Models for Autonomous Driving},
-  author    = {},
-  year      = {2025},
-  school    = {},
-  note      = {PhD Proposal}
+  author    = {Amna},
+  year      = {2026},
+  school    = {MBZUAI},
 }
 ```
 
