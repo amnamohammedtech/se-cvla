@@ -1,0 +1,49 @@
+# configs/training/stage3_selfevolving.yaml
+# Stage 3: Self-evolving updates — full pipeline with RL + online SCM updates
+
+stage: 3
+description: "Self-evolving SCM with RL post-training and online causal discovery"
+
+max_epochs: 20
+warmup_steps: 100
+batch_size: 2
+gradient_clip: 0.3
+accumulate_grad_batches: 16
+
+optimizer:
+  _target_: torch.optim.AdamW
+  lr: 1.0e-5
+  weight_decay: 0.001
+
+scheduler:
+  _target_: transformers.get_cosine_with_hard_restarts_schedule_with_warmup
+  num_warmup_steps: 100
+  num_training_steps: 100000
+  num_cycles: 3
+
+loss_weights:
+  lambda_task: 1.0
+  lambda_causal: 1.0
+  lambda_counterfactual: 0.5
+  lambda_uncertainty: 0.2
+
+# Self-evolution specific settings
+self_evolving:
+  scm_update_freq: 50           # update SCM graph every N gradient steps
+  replay_buffer_size: 10000
+  replay_ratio: 0.3             # fraction of batch from replay
+  rl_reward_shaping: true
+  reward_components:
+    collision_penalty: -10.0
+    comfort_reward: 1.0
+    progress_reward: 2.0
+    causal_consistency_reward: 0.5
+
+sim:
+  env: "physicalai"
+  rollout_length: 160
+  num_parallel_envs: 8
+  reset_strategy: "adaptive"    # reset to OOD scenarios more often
+
+freeze_backbone: true
+lora_rank: 4

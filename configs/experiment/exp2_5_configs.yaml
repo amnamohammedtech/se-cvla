@@ -1,0 +1,78 @@
+# configs/experiment/exp2_adaptation.yaml
+# Experiment 2: Adaptation to changing environments
+
+# @package _global_
+experiment_name: "exp2_environment_adaptation"
+description: "Test online SCM adaptation as environment statistics shift"
+
+evaluation:
+  adaptation:
+    shift_schedule: "gradual"      # "gradual" | "sudden" | "periodic"
+    shift_types: ["traffic_density", "weather_progression", "time_of_day"]
+    adaptation_window: 50          # steps to measure adaptation lag
+  metrics: ["scm_stability", "adaptation_speed", "ade_after_shift"]
+  num_episodes: 300
+
+---
+# configs/experiment/exp3_counterfactual.yaml
+# Experiment 3: Counterfactual prediction accuracy
+
+# @package _global_
+experiment_name: "exp3_counterfactual_accuracy"
+description: "Measure counterfactual prediction against ground-truth interventions"
+
+evaluation:
+  interventions:
+    - "remove_leading_vehicle"
+    - "change_traffic_light"
+    - "add_pedestrian"
+    - "alter_road_curvature"
+  ground_truth_source: "physicalai_interventions"
+  metrics: ["counterfactual_error", "causal_consistency_score", "sem_accuracy"]
+  num_episodes: 200
+
+---
+# configs/experiment/exp4_closed_loop.yaml
+# Experiment 4: Closed-loop stability
+
+# @package _global_
+experiment_name: "exp4_closed_loop_stability"
+description: "Long-horizon closed-loop evaluation in PhysicalAI-AV simulation"
+
+evaluation:
+  horizon: 300                     # 30-second episodes
+  scenarios: ["urban", "highway", "suburban", "adverse_weather"]
+  metrics: ["collision_rate", "comfort_score", "route_completion", "risk_score"]
+  num_episodes: 500
+  baselines:
+    - "alpamayo_1"
+    - "alpamayo_1_5"
+    - "se_cvla_no_scm"             # ablation
+
+---
+# configs/experiment/exp5_ablation.yaml
+# Experiment 5: Ablation study
+
+# @package _global_
+experiment_name: "exp5_ablation"
+description: "Remove key components and measure degradation"
+
+ablations:
+  - name: "full_model"
+    disable: []
+  - name: "no_scm"
+    disable: ["scm"]
+  - name: "no_counterfactual"
+    disable: ["counterfactual"]
+  - name: "no_uncertainty"
+    disable: ["uncertainty"]
+  - name: "no_rl_posttraining"
+    checkpoint: "outputs/stage2/best.ckpt"
+  - name: "no_causal_loss"
+    loss_weights: {lambda_causal: 0.0}
+  - name: "standard_vla_baseline"
+    disable: ["scm", "counterfactual", "uncertainty"]
+
+evaluation:
+  metrics: ["ade", "fde", "collision_rate", "ccs", "ece", "roc_auc_ood"]
+  num_episodes: 200

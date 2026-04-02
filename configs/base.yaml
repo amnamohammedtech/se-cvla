@@ -1,0 +1,30 @@
+# configs/base.yaml
+# Base configuration for SE-CVLA experiments.
+# Override with: python scripts/train.py model.hidden_dim=1024
+
+defaults:
+  - model: se_cvla_10b
+  - training: stage3_selfevolving
+  - data: physicalai_av
+  - _self_
+
+project_name: "SE-CVLA"
+seed: 42
+output_dir: "outputs/${experiment_name}"
+experiment_name: "base"
+
+# ─── Logging ──────────────────────────────────────────────────────────────────
+logging:
+  use_wandb: true
+  wandb_project: "se-cvla"
+  wandb_entity: null          # set via env: WANDB_ENTITY
+  log_every_n_steps: 50
+  save_top_k: 3
+
+# ─── Hardware ─────────────────────────────────────────────────────────────────
+hardware:
+  accelerator: "gpu"
+  devices: 1                  # increase for multi-GPU DDP
+  precision: "bf16-mixed"
+  compile: false              # torch.compile — enable for H100+
+  flash_attn: true

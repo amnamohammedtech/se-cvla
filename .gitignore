@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+.eggs/
+
+# Environments
+.venv/
+se_cvla_venv/
+a1_5_venv/
+
+# Hydra outputs
+outputs/
+multirun/
+.hydra/
+
+# Model weights (large files)
+*.ckpt
+*.pth
+*.bin
+*.safetensors
+!tests/**/*.ckpt   # allow tiny test fixtures
+
+# Caches
+.cache/
+~/.cache/physicalai_av/
+wandb/
+lightning_logs/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+.coverage
+htmlcov/
+.pytest_cache/
+outputs/
+se_cvla_venv/
+*.ckpt
+training.log
+nohup.out

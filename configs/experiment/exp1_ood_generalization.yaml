@@ -1,0 +1,20 @@
+# configs/experiment/exp1_ood_generalization.yaml
+# Experiment 1: OOD Generalization under unseen conditions
+
+# @package _global_
+defaults:
+  - override /training: stage3_selfevolving
+
+experiment_name: "exp1_ood_generalization"
+description: "Evaluate SE-CVLA on unseen weather, road types, and agent behaviors"
+
+evaluation:
+  ood_splits:
+    - name: "unseen_weather"
+      conditions: ["heavy_rain", "snow", "dense_fog"]
+    - name: "unseen_road_types"
+      conditions: ["roundabout", "highway_merge", "construction_zone"]
+    - name: "unseen_agent_behaviors"
+      conditions: ["aggressive_driver", "jaywalking_ped", "erratic_cyclist"]
+  metrics: ["roc_auc_ood", "ade", "fde", "collision_rate"]
+  num_episodes: 500

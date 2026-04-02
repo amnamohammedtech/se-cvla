@@ -1,0 +1,48 @@
+name: SE-CVLA-10B
+
+encoder:
+  vision_backbone: openai/clip-vit-base-patch32
+  language_backbone: Qwen/Qwen2.5-1.5B
+  vision_tokens: 50
+  hidden_dim: 1536
+  num_heads: 12
+  num_layers: 4
+  dropout: 0.1
+  attn_implementation: eager
+
+scm:
+  num_variables: 16
+  hidden_dim: 256
+  gnn_layers: 2
+  gnn_heads: 4
+  max_parents: 3
+  acyclicity_weight: 1.0
+  update_frequency: 100
+  graph_prior: sparse
+  sem_type: nonlinear
+  sparsity_weight: 0.01
+
+policy:
+  action_dim: 2
+  horizon: 64
+  hidden_dim: 512
+  num_layers: 2
+  conditioning: causal
+  diffusion_steps: 10
+  cfg_scale: 1.0
+
+counterfactual:
+  num_samples: 4
+  intervention_types:
+    - object_removal
+    - trajectory_perturbation
+  cf_horizon: 16
+  rollout_steps: 4
+
+uncertainty:
+  method: evidential
+  ensemble_size: 3
+  mc_dropout_samples: 5
+  dropout_rate: 0.1
+  calibration_bins: 10
+  risk_threshold: 0.8

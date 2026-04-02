@@ -1,0 +1,60 @@
+# configs/data/physicalai_av.yaml
+# PhysicalAI-AV dataset configuration
+
+dataset:
+  name: "nvidia/PhysicalAI-Autonomous-Vehicles"
+  split_ratios: [0.8, 0.1, 0.1]   # train / val / test
+  cache_dir: "~/.cache/physicalai_av"
+  streaming: true                  # stream from HuggingFace hub
+
+# Camera configuration
+cameras:
+  names: ["front", "front_left", "front_right", "rear", "rear_left", "rear_right"]
+  image_size: [224, 400]           # H x W per camera
+  num_cameras: 6                   # flexible — model supports variable count
+  normalize_mean: [0.485, 0.456, 0.406]
+  normalize_std:  [0.229, 0.224, 0.225]
+
+# Ego state
+ego_state:
+  features: ["velocity", "acceleration", "yaw_rate", "steering_angle", "position"]
+  history_len: 21                  # 2.1s history at 10Hz
+
+# Trajectory
+trajectory:
+  future_len: 64                   # 6.4s at 10Hz
+  coordinate_system: "ego"
+
+# Agents
+agents:
+  max_agents: 32
+  feature_dim: 10                  # x, y, vx, vy, heading, length, width, type...
+
+# Language / reasoning
+language:
+  max_tokens: 512
+  include_chain_of_causation: true
+
+# Augmentation (see data/augmentation/)
+augmentation:
+  train:
+    - type: "object_removal"
+      prob: 0.2
+    - type: "trajectory_perturbation"
+      prob: 0.3
+      noise_std: 0.5
+    - type: "sensor_noise"
+      prob: 0.15
+      noise_level: 0.1
+    - type: "counterfactual_scenario"
+      prob: 0.1
+  val:
+    - type: "sensor_noise"
+      prob: 0.05
+      noise_level: 0.05
+  test: []                         # no augmentation at test time
+
+dataloader:
+  num_workers: 8
+  pin_memory: true
+  prefetch_factor: 2

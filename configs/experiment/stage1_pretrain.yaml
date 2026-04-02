@@ -1,0 +1,31 @@
+# configs/training/stage1_pretrain.yaml
+# Stage 1: Pretrain VLA backbone + initial SCM from offline data
+
+stage: 1
+description: "Pretrain multimodal encoder + initial SCM on offline PhysicalAI-AV"
+
+max_epochs: 10
+warmup_steps: 1000
+batch_size: 8
+gradient_clip: 1.0
+accumulate_grad_batches: 4
+
+optimizer:
+  _target_: torch.optim.AdamW
+  lr: 1.0e-4
+  weight_decay: 0.01
+  betas: [0.9, 0.999]
+
+scheduler:
+  _target_: transformers.get_cosine_schedule_with_warmup
+  num_warmup_steps: 1000
+  num_training_steps: 50000
+
+loss_weights:
+  lambda_task: 1.0
+  lambda_causal: 0.1          # light causal supervision in stage 1
+  lambda_counterfactual: 0.0  # disabled in stage 1
+  lambda_uncertainty: 0.05
+
+freeze_backbone: false
+lora_rank: 16                  # LoRA for backbone fine-tuning efficiency
